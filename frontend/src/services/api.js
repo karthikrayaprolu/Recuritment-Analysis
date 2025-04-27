@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5001";  // Updated Flask port
+const BASE_URL = "https://recuritment-analysis-backend.onrender.com";  // Updated Flask port
 
 export const submitPrediction = async (formData) => {
   try {
