@@ -3,13 +3,18 @@ from flask_cors import CORS
 import joblib
 import numpy as np
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-# Connect to MongoDB (Ensure database name is correct)
+# Load environment variables
+load_dotenv()
+
+# Connect to MongoDB
 client = MongoClient(os.getenv("MONGODB_URI"))
-db = client["recruitmentDB"]  # Use the correct database name
+db = client["recruitmentDB"]
 collection = db["predictions"]
 
 # Load the trained model and scaler
@@ -50,11 +55,10 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route('/history', methods=['GET'])
 def get_history():
     try:
-        # Fetch all predictions and sort by _id in descending order (latest first)
+        # Fetch all predictions and sort by _idrimary in descending order (latest first)
         history = list(collection.find({}, {"_id": 0}).sort("_id", -1))
         return jsonify(history)
     except Exception as e:
@@ -86,7 +90,6 @@ def get_stats():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    
 if __name__ == '__main__':
     print("🚀 Flask server running on http://localhost:5001")
     app.run(debug=True, port=5001)
